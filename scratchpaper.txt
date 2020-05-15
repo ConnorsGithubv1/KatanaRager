@@ -1,0 +1,18 @@
+
+opens menu screen
+
+music starts playing that ends after played once
+
+background is visual opening that ends after played once
+
+banner in bottom middle of screen displays "press any button to continue"
+
+if any button is clicked (except esc, windows button, alt,) banner disappears
+
+animated menu slides in from the right toward the center
+
+
+
+
+
+
