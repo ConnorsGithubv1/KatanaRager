@@ -8,11 +8,10 @@ import pygame, sys
 # initialization
 pygame.init()
 
-
-#background music
+# background music
 pygame.mixer.init()
 pygame.mixer.music.load('sounds\menumusic.mp3')
-pygame.mixer.music.set_volume(0.35)
+pygame.mixer.music.set_volume(0.3)
 pygame.mixer.music.play()
 
 # vars-----------------------
@@ -33,6 +32,7 @@ menuDisplay = pygame.display.set_mode((display_width, display_height), pygame.FU
 menuImg = pygame.image.load('media/menudisplay.png')
 menutextImg = pygame.image.load('media/menutext1.png')
 
+# image paths
 bg1 = 'media/menu/01background1.png'
 bg2 = 'media/menu/01background2.png'
 bg3 = 'media/menu/01background3.png'
@@ -40,15 +40,14 @@ bg4 = 'media/menu/01background4.png'
 bg5 = 'media/menu/01background5.png'
 bg6 = 'media/menu/01background6.png'
 bg7 = 'media/menu/01background7.png'
+transrect = 'media/transparentrect.png'
 
-
-luffybg = pygame.image.load('media/luffybg.png')
-
+# menu img list (used to animate the menu background)
 imglist = [bg1, bg2, bg3, bg4, bg5, bg6, bg7]
 
-
-#colors
+# colors
 black = (0, 0, 0)
+transblack = (0.5, 0.5, 0.5, 0.5)
 white = (255, 255, 255)
 red = (170, 0, 0, 128)
 bright_red = (255, 100, 0)
@@ -81,53 +80,24 @@ topY = display_height / 10 - text.get_rect().height
 btnXlen = 300
 btnYlen = 70
 
-#functions--------------------------------------------------
-# used to fade out of screens
-def fade(width, height):
 
-    fade = pygame.Surface((screensize))
-    fade.fill((0, 0, 0))
-    for alpha in range(0, 300):
-        fade.set_alpha(alpha)
-        menuDisplay.blit(fade, (0, 0))
-        pygame.display.update()
-        pygame.time.delay(1)
+# functions--------------------------------------------------
 
 # sets the background to a selected image
-def setbg(imglist):
+def setbg(imglist, x):
+    img = imglist[0]
+    print(img)
+    a = pygame.image.load(img)
+    menuDisplay.blit(pygame.transform.scale(a, (display_width + 150, display_height + 50)), (x, 0))
 
-    x = 0
-    z = 0
-    while z < 100:
-        while x < 7:
-            img = imglist[x]
-            print(img)
-            a = pygame.image.load(img)
-            menuDisplay.blit(pygame.transform.scale(a, (display_width, display_height)), (0, 0))
-            x = x + 1
-            if x == 6:
-                x = 0
-            z = z + 1
 
-    """
-    img = " "
-    x = 0
-    while x > 7:
-        img = list[0]
-        menuDisplay.blit(pygame.transform.scale(img, (display_width, display_height)), (0, 0))
-        x + 1
-        if x == 6:
-            x = 0
-    """
-
-#finds position of mouse
+# finds position of mouse
 def mousePos():
     return pygame.mouse.get_pos()
 
 
-# work in progress
-def menustart():
-    # filters deprecation warnings
+# hides the warnings
+def hidewarnings():
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
@@ -136,39 +106,45 @@ def buttonposition(button):
     pos = 0
     return pos
 
+def createtransbg(imgpath):
+    img = pygame.image.load(imgpath)
+    menuDisplay.blit(pygame.transform.scale(img, (500, display_height)), (display_width/1.3, 0))
+
+
 # creates a useable button
 def createbtn(xpos, ypos, name, color, xlen, ylen):
     pygame.draw.rect(menuDisplay, color, (xpos, ypos, xlen, ylen))
     menuDisplay.blit(smFont.render(name, True, white), (xpos, ypos))
+
 
 # Start button // starts game
 def startbtn():
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
-    #checks if mouse is hovering over button / checks if button is clicked
+    # checks if mouse is hovering over button / checks if button is clicked
     if x1 + btnXlen > mouse[0] > x1 and y1 + btnYlen > mouse[1] > y1:
         createbtn(x1, y1, 'START', purple, btnXlen, btnYlen)
         if click[0] == 1:
-            fade(display_height, display_width)
             os.startfile(gamepath)
             sys.exit()
     else:
         createbtn(x1, y1, 'START', blueviolet, btnXlen, btnYlen)
+
 
 # settings button // used to access redirect user to settings screenF
 def settingsbtn():
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
-    #checks if mouse is hovering over button / checks if button is clicked
+    # checks if mouse is hovering over button / checks if button is clicked
     if x1 + btnXlen > mouse[0] > x1 and y2 + btnYlen > mouse[1] > y2:
         createbtn(x1, y2, "SETTINGS", purple, btnXlen, btnYlen)
         if click[0] == 1:
-            fade(display_height, display_width)
             os.startfile(settingspath)
     else:
         createbtn(x1, y2, "SETTINGS", blueviolet, btnXlen, btnYlen)
+
 
 # exit Button // ends menu screen and closes game
 def exitbtn():
@@ -184,8 +160,13 @@ def exitbtn():
         createbtn(x1, y3, "EXIT", blueviolet, btnXlen, btnYlen)
 
 
+# -----------------------------------------------------------------------------------------------------------------------
+xVal = 0
+
+
 # Main Menu
 def main_menu():
+    global xVal
     # MenuLoop
     gameExit = False
     while not gameExit:
@@ -197,18 +178,24 @@ def main_menu():
                 if event.key == K_ESCAPE:
                     sys.exit()
 
-
-
         menuDisplay.fill(black)
-        setbg(imglist)
-        menustart()
+
+        # moves the display to the left
+        setbg(imglist, xVal)
+        xVal -= 0.5
+        print(xVal)
+        if xVal == -150:
+            xVal = -149
+
+        hidewarnings()
+
+        createtransbg(transrect)
+        # creates main menu buttons
         startbtn()
         settingsbtn()
         exitbtn()
-        mousePos()
 
         pygame.display.update()
-
 
 
 # Enter the mainloop----------------------------------------------------------

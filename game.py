@@ -120,7 +120,7 @@ def game():
                 sys.exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    os.startfile(optionspath)
+                    sys.exit()
                 if event.key == K_d:
                     moving = False
                     moving_right = True
