@@ -32,17 +32,19 @@ menuDisplay = pygame.display.set_mode((display_width, display_height), pygame.FU
 # images
 menuImg = pygame.image.load('media/menudisplay.png')
 menutextImg = pygame.image.load('media/menutext1.png')
-skybg = pygame.image.load('media/background4.png')
-bg1 = pygame.image.load('media/background1.png')
-bg2 = pygame.image.load('media/background2.png')
-bg3 = pygame.image.load('media/background3.png')
-bg4 = pygame.image.load('media/background4.png')
-bg5 = pygame.image.load('media/background5.png')
-bg6 = pygame.image.load('media/background6.png')
+
+bg1 = 'media/menu/01background1.png'
+bg2 = 'media/menu/01background2.png'
+bg3 = 'media/menu/01background3.png'
+bg4 = 'media/menu/01background4.png'
+bg5 = 'media/menu/01background5.png'
+bg6 = 'media/menu/01background6.png'
+bg7 = 'media/menu/01background7.png'
+
 
 luffybg = pygame.image.load('media/luffybg.png')
 
-imglist = [bg1, bg2, bg3, bg4, bg5, bg6, luffybg]
+imglist = [bg1, bg2, bg3, bg4, bg5, bg6, bg7]
 
 
 #colors
@@ -92,9 +94,31 @@ def fade(width, height):
         pygame.time.delay(1)
 
 # sets the background to a selected image
-def setbg(img):
-    menuDisplay.blit(pygame.transform.scale(img, (display_width, display_height)), (0, 0))
+def setbg(imglist):
 
+    x = 0
+    z = 0
+    while z < 100:
+        while x < 7:
+            img = imglist[x]
+            print(img)
+            a = pygame.image.load(img)
+            menuDisplay.blit(pygame.transform.scale(a, (display_width, display_height)), (0, 0))
+            x = x + 1
+            if x == 6:
+                x = 0
+            z = z + 1
+
+    """
+    img = " "
+    x = 0
+    while x > 7:
+        img = list[0]
+        menuDisplay.blit(pygame.transform.scale(img, (display_width, display_height)), (0, 0))
+        x + 1
+        if x == 6:
+            x = 0
+    """
 
 #finds position of mouse
 def mousePos():
@@ -173,13 +197,15 @@ def main_menu():
                 if event.key == K_ESCAPE:
                     sys.exit()
 
+
+
         menuDisplay.fill(black)
-        setbg(luffybg)
+        setbg(imglist)
         menustart()
         startbtn()
         settingsbtn()
         exitbtn()
-        print(mousePos())
+        mousePos()
 
         pygame.display.update()
 
